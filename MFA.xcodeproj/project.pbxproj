@@ -6,8 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		EF2421C7B55EE4B31825200B /* Pods_mfa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C2E94A89CA5899DE326A03B /* Pods_mfa.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		1A293DD02D9A443A00CB64AC /* mfa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mfa.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A293DD02D9A443A00CB64AC /* MFA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MFA.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C2E94A89CA5899DE326A03B /* Pods_mfa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_mfa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6CB7F6F95D93108939275E62 /* Pods-mfa.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mfa.release.xcconfig"; path = "Target Support Files/Pods-mfa/Pods-mfa.release.xcconfig"; sourceTree = "<group>"; };
+		DF4DF332EC36151AF7576485 /* Pods-mfa.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mfa.debug.xcconfig"; path = "Target Support Files/Pods-mfa/Pods-mfa.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF2421C7B55EE4B31825200B /* Pods_mfa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -34,24 +42,44 @@
 			children = (
 				1A293DD22D9A443A00CB64AC /* mfa */,
 				1A293DD12D9A443A00CB64AC /* Products */,
+				B8D3B747B52F22B2E684873E /* Pods */,
+				911891FBBCFB2F6E2539C256 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		1A293DD12D9A443A00CB64AC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1A293DD02D9A443A00CB64AC /* mfa.app */,
+				1A293DD02D9A443A00CB64AC /* MFA.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		911891FBBCFB2F6E2539C256 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2C2E94A89CA5899DE326A03B /* Pods_mfa.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B8D3B747B52F22B2E684873E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				DF4DF332EC36151AF7576485 /* Pods-mfa.debug.xcconfig */,
+				6CB7F6F95D93108939275E62 /* Pods-mfa.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1A293DCF2D9A443A00CB64AC /* mfa */ = {
+		1A293DCF2D9A443A00CB64AC /* MFA */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1A293DDE2D9A443A00CB64AC /* Build configuration list for PBXNativeTarget "mfa" */;
+			buildConfigurationList = 1A293DDE2D9A443A00CB64AC /* Build configuration list for PBXNativeTarget "MFA" */;
 			buildPhases = (
+				C7654E66F53D5CE0D946B72B /* [CP] Check Pods Manifest.lock */,
 				1A293DCC2D9A443A00CB64AC /* Sources */,
 				1A293DCD2D9A443A00CB64AC /* Frameworks */,
 				1A293DCE2D9A443A00CB64AC /* Resources */,
@@ -63,11 +91,9 @@
 			fileSystemSynchronizedGroups = (
 				1A293DD22D9A443A00CB64AC /* mfa */,
 			);
-			name = mfa;
-			packageProductDependencies = (
-			);
+			name = MFA;
 			productName = mfa;
-			productReference = 1A293DD02D9A443A00CB64AC /* mfa.app */;
+			productReference = 1A293DD02D9A443A00CB64AC /* MFA.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -99,7 +125,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1A293DCF2D9A443A00CB64AC /* mfa */,
+				1A293DCF2D9A443A00CB64AC /* MFA */,
 			);
 		};
 /* End PBXProject section */
@@ -113,6 +139,31 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C7654E66F53D5CE0D946B72B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-mfa-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1A293DCC2D9A443A00CB64AC /* Sources */ = {
@@ -246,6 +297,7 @@
 		};
 		1A293DDF2D9A443A00CB64AC /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DF4DF332EC36151AF7576485 /* Pods-mfa.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -275,6 +327,7 @@
 		};
 		1A293DE02D9A443A00CB64AC /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6CB7F6F95D93108939275E62 /* Pods-mfa.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -314,7 +367,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1A293DDE2D9A443A00CB64AC /* Build configuration list for PBXNativeTarget "mfa" */ = {
+		1A293DDE2D9A443A00CB64AC /* Build configuration list for PBXNativeTarget "MFA" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1A293DDF2D9A443A00CB64AC /* Debug */,

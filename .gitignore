@@ -1,0 +1,71 @@
+# Xcode
+#
+# gitignore 模板用于 Swift 项目
+
+## 构建生成
+build/
+DerivedData/
+
+## 各种设置
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+
+## 其他
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+*.xcuserstate
+.DS_Store
+
+## Obj-C/Swift 特定
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+#
+# 添加此行以忽略Swift Package Manager生成的所有依赖项
+Packages/
+Package.pins
+Package.resolved
+.build/
+
+# CocoaPods
+#
+# 建议不要提交Pods目录到版本控制
+# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
+#
+Pods/
+Podfile.lock
+
+# Carthage
+#
+# 添加此行以忽略Carthage生成的依赖项
+Carthage/Checkouts
+Carthage/Build
+
+# fastlane
+#
+# 建议不要提交fastlane生成的截图到版本控制
+# 而是在fastlane中重新生成这些截图
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Code Injection
+#
+# 忽略代码注入工具生成的文件
+iOSInjectionProject/
