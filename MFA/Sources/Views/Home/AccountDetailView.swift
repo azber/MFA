@@ -5,6 +5,9 @@ struct AccountDetailView: View {
     @State private var timeRemaining: Int = 30
     @State private var showingEditSheet = false
     @State private var showingDeleteAlert = false
+    @State private var deleteConfirmationText = ""
+    @State private var showingDeleteConfirmationError = false
+    @EnvironmentObject private var appState: AppState
     @Environment(\.colorScheme) private var colorScheme
     
     // 定时器，用于更新验证码
@@ -30,12 +33,29 @@ struct AccountDetailView: View {
             updateTimeRemaining()
         }
         .alert("确认删除", isPresented: $showingDeleteAlert) {
+            TextField("输入 \"DELETE\" 确认", text: $deleteConfirmationText)
+                .autocorrectionDisabled()
+            
             Button("删除", role: .destructive) {
-                // TODO: 实现删除逻辑
+                if deleteConfirmationText == "DELETE" {
+                    deleteAccount()
+                } else {
+                    showingDeleteConfirmationError = true
+                    deleteConfirmationText = ""
+                }
             }
-            Button("取消", role: .cancel) {}
+            .disabled(deleteConfirmationText != "DELETE")
+            
+            Button("取消", role: .cancel) {
+                deleteConfirmationText = ""
+            }
         } message: {
-            Text("确定要删除这个账户吗？此操作无法撤销。")
+            Text("⚠️ 警告：此操作将永久删除 \"\(account.name)\" 账户及其验证码。\n\n删除后，您将无法再生成此账户的验证码，可能导致无法登录相关服务。\n\n请输入 \"DELETE\" 确认删除。")
+        }
+        .alert("确认失败", isPresented: $showingDeleteConfirmationError) {
+            Button("确定", role: .cancel) {}
+        } message: {
+            Text("您需要输入 \"DELETE\" 才能确认删除操作。")
         }
     }
     
@@ -70,32 +90,38 @@ struct AccountDetailView: View {
     private var codeDisplay: some View {
         VStack(spacing: 20) {
             // 验证码
-            HStack(spacing: 16) {
-                let code = account.generateCode()
-                ForEach(0..<2) { index in
-                    Text(code[index * 3..<(index + 1) * 3])
-                        .font(.system(size: 48, weight: .medium, design: .monospaced))
-                        .frame(width: 120)
+            let code = account.generateCode()
+            Text(code)
+                .font(.system(size: 48, weight: .medium, design: .monospaced))
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(colorScheme == .dark ? Color(.textBackgroundColor).opacity(0.3) : Color(.textBackgroundColor).opacity(0.1))
+                )
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    copyCode()
                 }
-            }
             
             // 进度条和倒计时
-            HStack(spacing: 16) {
+            HStack(spacing: 8) {
                 // 圆形进度条
                 CircularProgressView(progress: Double(timeRemaining) / Double(account.period))
-                    .frame(width: 24, height: 24)
+                    .frame(width: 20, height: 20)
                 
                 Text("\(timeRemaining)秒后更新")
                     .foregroundColor(.secondary)
                     .font(.subheadline)
+                
+                Spacer()
+                
+                // 复制状态提示
+                Text("点击复制")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
-            
-            // 复制按钮
-            Button(action: copyCode) {
-                Label("复制验证码", systemImage: "doc.on.doc")
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
+            .padding(.horizontal, 4)
         }
         .padding(24)
         .background(
@@ -103,24 +129,42 @@ struct AccountDetailView: View {
                 .fill(colorScheme == .dark ? Color(.windowBackgroundColor) : .white)
                 .shadow(color: .black.opacity(0.1), radius: 10)
         )
+        .frame(maxWidth: 500) // 限制最大宽度，与按钮区域保持一致
     }
     
     private var managementButtons: some View {
-        HStack(spacing: 16) {
+        VStack(spacing: 12) {
+            // 主要按钮 - 编辑
             Button(action: { showingEditSheet = true }) {
-                Label("编辑", systemImage: "pencil")
+                Label("编辑账户", systemImage: "pencil")
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
             
-            Button(action: { showingDeleteAlert = true }) {
-                Label("删除", systemImage: "trash")
+            // 次要操作菜单
+            Menu {
+                // 复制密钥选项
+                Button(action: {
+                    NSPasteboard.general.clearContents()
+                    NSPasteboard.general.setString(account.secret, forType: .string)
+                }) {
+                    Label("复制密钥", systemImage: "doc.on.doc")
+                }
+                
+                // 删除选项 - 放在菜单的最底部
+                Divider()
+                
+                Button(role: .destructive, action: { showingDeleteAlert = true }) {
+                    Label("删除账户", systemImage: "trash")
+                }
+            } label: {
+                Label("更多操作", systemImage: "ellipsis.circle")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
-            .tint(.red)
+            .controlSize(.large)
         }
-        .controlSize(.large)
     }
     
     private func updateTimeRemaining() {
@@ -130,6 +174,10 @@ struct AccountDetailView: View {
     private func copyCode() {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(account.generateCode(), forType: .string)
+    }
+    
+    private func deleteAccount() {
+        appState.removeAccount(account)
     }
 }
 
@@ -161,4 +209,5 @@ extension String {
         issuer: "Example.com",
         secret: "ABCDEF123456"
     ))
-} 
+    .environmentObject(AppState())
+}
