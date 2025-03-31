@@ -9,14 +9,39 @@ struct AddAccountView: View {
     @State private var showingError = false
     @State private var errorMessage = ""
     @State private var isValidatingSecret = false
+    @State private var isEditMode = false
+    @State private var editingAccountId: UUID?
+    
+    // 初始化方法 - 默认添加模式
+    init() {
+        self._isEditMode = State(initialValue: false)
+    }
+    
+    // 初始化方法 - 编辑模式
+    init(editingAccount: MFAAccount) {
+        self._isEditMode = State(initialValue: true)
+        self._editingAccountId = State(initialValue: editingAccount.id)
+        self._manualAccount = State(initialValue: ManualAccountInput(
+            name: editingAccount.name,
+            issuer: editingAccount.issuer,
+            secret: editingAccount.secret,
+            algorithm: editingAccount.algorithm,
+            type: editingAccount.type,
+            digits: editingAccount.digits,
+            period: editingAccount.period,
+            counter: 0 // 由于 counter 是私有属性，我们使用默认值
+        ))
+    }
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 24) {
-                // 选择添加方式
-                addMethodPicker
+                // 选择添加方式 - 仅在非编辑模式下显示
+                if !isEditMode {
+                    addMethodPicker
+                }
                 
-                if isScanning {
+                if isScanning && !isEditMode {
                     // 扫描QR码视图
                     QRScannerView { code in
                         handleScannedCode(code)
@@ -30,7 +55,7 @@ struct AddAccountView: View {
             }
             .padding(32)
             .frame(width: 500)
-            .navigationTitle("添加新账户")
+            .navigationTitle(isEditMode ? "编辑账户" : "添加新账户")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("取消") { 
@@ -38,9 +63,15 @@ struct AddAccountView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    if !isScanning {
-                        Button("添加") { addAccount() }
-                            .disabled(!manualAccount.isValid || isValidatingSecret)
+                    if !isScanning || isEditMode {
+                        Button(isEditMode ? "保存" : "添加") { 
+                            if isEditMode {
+                                updateAccount()
+                            } else {
+                                addAccount()
+                            }
+                        }
+                        .disabled(!manualAccount.isValid || isValidatingSecret)
                     }
                 }
             }
@@ -91,7 +122,11 @@ struct AddAccountView: View {
                     Text("基于计数器 (HOTP)").tag(MFAAccount.AccountType.hotp)
                 }
                 
-                Stepper("验证码位数: \(manualAccount.digits)", value: $manualAccount.digits, in: 6...8)
+                Picker("验证码位数", selection: $manualAccount.digits) {
+                    Text("6 位").tag(6)
+                    Text("7 位").tag(7)
+                    Text("8 位").tag(8)
+                }
                 
                 if manualAccount.type == .totp {
                     Stepper("更新周期: \(manualAccount.period)秒", value: $manualAccount.period, in: 30...60, step: 30)
@@ -280,6 +315,54 @@ struct AddAccountView: View {
             appState.addAccount(newAccount)
             appState.selectedAccount = newAccount
             dismiss()
+            
+        } catch {
+            isValidatingSecret = false
+            showError("密钥格式无效或无法生成验证码")
+        }
+    }
+    
+    private func updateAccount() {
+        isValidatingSecret = true
+        
+        // 验证密钥是否有效
+        do {
+            if manualAccount.type == .totp {
+                _ = try OTPGenerator.generateTOTP(
+                    secret: manualAccount.secret,
+                    period: manualAccount.period,
+                    digits: manualAccount.digits,
+                    algorithm: manualAccount.algorithm
+                )
+            } else {
+                _ = try OTPGenerator.generateHOTP(
+                    secret: manualAccount.secret,
+                    counter: UInt64(manualAccount.counter),
+                    digits: manualAccount.digits,
+                    algorithm: manualAccount.algorithm
+                )
+            }
+            
+            // 更新账户
+            if let editingAccountId = editingAccountId {
+                // 创建更新后的账户实例
+                let updatedAccount = MFAAccount(
+                    id: editingAccountId,
+                    name: manualAccount.name,
+                    issuer: manualAccount.issuer,
+                    secret: manualAccount.secret,
+                    algorithm: manualAccount.algorithm,
+                    digits: manualAccount.digits,
+                    period: manualAccount.period,
+                    type: manualAccount.type,
+                    counter: UInt64(manualAccount.counter)
+                )
+                
+                // 使用AppState的方法更新账户
+                appState.updateAccount(updatedAccount)
+                appState.selectedAccount = updatedAccount
+                dismiss()
+            }
             
         } catch {
             isValidatingSecret = false

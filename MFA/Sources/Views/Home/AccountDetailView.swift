@@ -32,6 +32,10 @@ struct AccountDetailView: View {
         .onReceive(timer) { _ in
             updateTimeRemaining()
         }
+        .sheet(isPresented: $showingEditSheet) {
+            AddAccountView(editingAccount: account)
+                .environmentObject(appState)
+        }
         .alert("确认删除", isPresented: $showingDeleteAlert) {
             TextField("输入 \"DELETE\" 确认", text: $deleteConfirmationText)
                 .autocorrectionDisabled()
