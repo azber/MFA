@@ -4,6 +4,7 @@ struct AccountRowView: View {
     let account: MFAAccount
     @State private var currentCode: String = ""
     @State private var timeRemaining: Int = 30
+    @EnvironmentObject private var appState: AppState
     
     // 定时器用于更新验证码
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -25,6 +26,9 @@ struct AccountRowView: View {
         }
         .padding(.vertical, 8)
         .contentShape(Rectangle()) // 使整行可点击
+        .onTapGesture {
+            appState.selectedAccount = account
+        }
         .onAppear {
             updateCode()
         }
@@ -118,4 +122,5 @@ struct AccountRowView: View {
         ))
     }
     .frame(width: 300)
-} 
+    .environmentObject(AppState())
+}
