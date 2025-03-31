@@ -7,20 +7,36 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		EF2421C7B55EE4B31825200B /* Pods_mfa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C2E94A89CA5899DE326A03B /* Pods_mfa.framework */; };
+		F84C8AF280B63CD9AB92C600 /* Pods_MFA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E36808C414B34A39C968352 /* Pods_MFA.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		027FF0465CF03910424FC36B /* Pods-MFA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MFA.release.xcconfig"; path = "Target Support Files/Pods-MFA/Pods-MFA.release.xcconfig"; sourceTree = "<group>"; };
 		1A293DD02D9A443A00CB64AC /* MFA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MFA.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2C2E94A89CA5899DE326A03B /* Pods_mfa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_mfa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E36808C414B34A39C968352 /* Pods_MFA.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MFA.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CB7F6F95D93108939275E62 /* Pods-mfa.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mfa.release.xcconfig"; path = "Target Support Files/Pods-mfa/Pods-mfa.release.xcconfig"; sourceTree = "<group>"; };
 		DF4DF332EC36151AF7576485 /* Pods-mfa.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mfa.debug.xcconfig"; path = "Target Support Files/Pods-mfa/Pods-mfa.debug.xcconfig"; sourceTree = "<group>"; };
+		FD6BC90DFB54EF10FB66B122 /* Pods-MFA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MFA.debug.xcconfig"; path = "Target Support Files/Pods-MFA/Pods-MFA.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1A550BAF2D9A8B1B008C1350 /* Exceptions for "MFA" folder in "MFA" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				"Preview Content/Preview Assets.xcassets",
+			);
+			target = 1A293DCF2D9A443A00CB64AC /* MFA */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		1A293DD22D9A443A00CB64AC /* mfa */ = {
+		1A293DD22D9A443A00CB64AC /* MFA */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = mfa;
+			exceptions = (
+				1A550BAF2D9A8B1B008C1350 /* Exceptions for "MFA" folder in "MFA" target */,
+			);
+			path = MFA;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -30,7 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF2421C7B55EE4B31825200B /* Pods_mfa.framework in Frameworks */,
+				F84C8AF280B63CD9AB92C600 /* Pods_MFA.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,7 +56,7 @@
 		1A293DC72D9A443A00CB64AC = {
 			isa = PBXGroup;
 			children = (
-				1A293DD22D9A443A00CB64AC /* mfa */,
+				1A293DD22D9A443A00CB64AC /* MFA */,
 				1A293DD12D9A443A00CB64AC /* Products */,
 				B8D3B747B52F22B2E684873E /* Pods */,
 				911891FBBCFB2F6E2539C256 /* Frameworks */,
@@ -58,7 +74,7 @@
 		911891FBBCFB2F6E2539C256 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2C2E94A89CA5899DE326A03B /* Pods_mfa.framework */,
+				3E36808C414B34A39C968352 /* Pods_MFA.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -68,6 +84,8 @@
 			children = (
 				DF4DF332EC36151AF7576485 /* Pods-mfa.debug.xcconfig */,
 				6CB7F6F95D93108939275E62 /* Pods-mfa.release.xcconfig */,
+				FD6BC90DFB54EF10FB66B122 /* Pods-MFA.debug.xcconfig */,
+				027FF0465CF03910424FC36B /* Pods-MFA.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -89,7 +107,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				1A293DD22D9A443A00CB64AC /* mfa */,
+				1A293DD22D9A443A00CB64AC /* MFA */,
 			);
 			name = MFA;
 			productName = mfa;
@@ -111,7 +129,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1A293DCB2D9A443A00CB64AC /* Build configuration list for PBXProject "mfa" */;
+			buildConfigurationList = 1A293DCB2D9A443A00CB64AC /* Build configuration list for PBXProject "MFA" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -156,7 +174,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-mfa-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-MFA-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -297,7 +315,7 @@
 		};
 		1A293DDF2D9A443A00CB64AC /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DF4DF332EC36151AF7576485 /* Pods-mfa.debug.xcconfig */;
+			baseConfigurationReference = FD6BC90DFB54EF10FB66B122 /* Pods-MFA.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -306,7 +324,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"mfa/Preview Content\"";
 				DEVELOPMENT_TEAM = D79NY95Y27;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ./MFA/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -319,15 +338,19 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.proventis.pilot.app.mfa;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = NO;
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		1A293DE02D9A443A00CB64AC /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6CB7F6F95D93108939275E62 /* Pods-mfa.release.xcconfig */;
+			baseConfigurationReference = 027FF0465CF03910424FC36B /* Pods-MFA.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -336,7 +359,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"mfa/Preview Content\"";
 				DEVELOPMENT_TEAM = D79NY95Y27;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ./MFA/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -349,16 +373,20 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.proventis.pilot.app.mfa;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = NO;
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1A293DCB2D9A443A00CB64AC /* Build configuration list for PBXProject "mfa" */ = {
+		1A293DCB2D9A443A00CB64AC /* Build configuration list for PBXProject "MFA" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1A293DDC2D9A443A00CB64AC /* Debug */,
