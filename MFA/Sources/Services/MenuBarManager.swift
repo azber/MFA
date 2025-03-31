@@ -9,9 +9,35 @@ class MenuBarManager: ObservableObject {
     
     init(appState: AppState) {
         self.appState = appState
-        setupStatusItem()
-        setupPopover()
-        setupEventMonitor()
+        
+        // 检查用户设置
+        if UserDefaults.standard.bool(forKey: "showInMenuBar") {
+            setupStatusItem()
+            setupPopover()
+            setupEventMonitor()
+        }
+        
+        // 监听设置变化
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleSettingsChange),
+            name: UserDefaults.didChangeNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func handleSettingsChange() {
+        let shouldShow = UserDefaults.standard.bool(forKey: "showInMenuBar")
+        
+        if shouldShow && statusItem == nil {
+            // 启用菜单栏图标
+            setupStatusItem()
+            setupPopover()
+            setupEventMonitor()
+        } else if !shouldShow && statusItem != nil {
+            // 禁用菜单栏图标
+            removeStatusItem()
+        }
     }
     
     private func setupStatusItem() {
@@ -22,6 +48,20 @@ class MenuBarManager: ObservableObject {
             button.action = #selector(togglePopover(_:))
             button.target = self
         }
+    }
+    
+    private func removeStatusItem() {
+        if let statusItem = statusItem {
+            NSStatusBar.system.removeStatusItem(statusItem)
+            self.statusItem = nil
+        }
+        
+        if let monitor = eventMonitor {
+            NSEvent.removeMonitor(monitor)
+            eventMonitor = nil
+        }
+        
+        popover = nil
     }
     
     private func setupPopover() {
@@ -67,5 +107,7 @@ class MenuBarManager: ObservableObject {
         if let monitor = eventMonitor {
             NSEvent.removeMonitor(monitor)
         }
+        
+        NotificationCenter.default.removeObserver(self)
     }
-} 
+}

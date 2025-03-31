@@ -1,7 +1,18 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appState: AppState
+    
+    // 临时状态变量，用于存储设置
+    @State private var tempAutoLockTimeout: Int
+    @State private var tempUseTouchID: Bool
+    @State private var tempShowInMenuBar: Bool
+    @State private var tempLaunchAtLogin: Bool
+    @State private var tempCopyTimeout: Int
+    @State private var tempColorScheme: ColorScheme?
+    
+    // 持久化存储
     @AppStorage("autoLockTimeout") private var autoLockTimeout: Int = 5
     @AppStorage("useTouchID") private var useTouchID: Bool = false
     @AppStorage("showInMenuBar") private var showInMenuBar: Bool = true
@@ -25,47 +36,103 @@ struct SettingsView: View {
         (60, "1分钟")
     ]
     
+    init() {
+        // 初始化临时状态变量
+        _tempAutoLockTimeout = State(initialValue: UserDefaults.standard.integer(forKey: "autoLockTimeout"))
+        _tempUseTouchID = State(initialValue: UserDefaults.standard.bool(forKey: "useTouchID"))
+        _tempShowInMenuBar = State(initialValue: UserDefaults.standard.bool(forKey: "showInMenuBar"))
+        _tempLaunchAtLogin = State(initialValue: UserDefaults.standard.bool(forKey: "launchAtLogin"))
+        _tempCopyTimeout = State(initialValue: UserDefaults.standard.integer(forKey: "copyTimeout"))
+        
+        // 获取当前的颜色方案
+        let isDarkMode = UserDefaults.standard.bool(forKey: "isDarkMode")
+        _tempColorScheme = State(initialValue: isDarkMode ? .dark : .light)
+    }
+    
     var body: some View {
-        TabView {
-            generalSettings
-                .tabItem {
-                    Label("通用", systemImage: "gear")
-                }
+        VStack(spacing: 0) {
+            TabView {
+                generalSettings
+                    .padding(.horizontal, 16)
+                    .tabItem {
+                        Label("通用", systemImage: "gear")
+                    }
+                
+                securitySettings
+                    .padding(.horizontal, 16)
+                    .tabItem {
+                        Label("安全", systemImage: "lock")
+                    }
+                
+                aboutView
+                    .padding(.horizontal, 16)
+                    .tabItem {
+                        Label("关于", systemImage: "info.circle")
+                    }
+            }
+            .frame(height: 300)
             
-            securitySettings
-                .tabItem {
-                    Label("安全", systemImage: "lock")
+            // 底部按钮
+            HStack {
+                Spacer()
+                Button("取消") {
+                    dismiss()
                 }
-            
-            shortcutSettings
-                .tabItem {
-                    Label("快捷键", systemImage: "keyboard")
+                Button("保存") {
+                    saveSettings()
+                    dismiss()
                 }
-            
-            aboutView
-                .tabItem {
-                    Label("关于", systemImage: "info.circle")
-                }
+                .buttonStyle(.borderedProminent)
+            }
+            .padding(.top, 12)
         }
-        .frame(width: 500, height: 300)
-        .padding()
+        .frame(width: 520)
+        .padding(20)
+    }
+    
+    // 保存设置
+    private func saveSettings() {
+        // 保存到 AppStorage
+        autoLockTimeout = tempAutoLockTimeout
+        useTouchID = tempUseTouchID
+        showInMenuBar = tempShowInMenuBar
+        launchAtLogin = tempLaunchAtLogin
+        copyTimeout = tempCopyTimeout
+        
+        // 保存颜色方案
+        if let colorScheme = tempColorScheme {
+            appState.colorScheme = colorScheme
+        }
+        
+        // 应用设置
+        applySettings()
+    }
+    
+    // 应用设置
+    private func applySettings() {
+        // 应用菜单栏设置 - 通过 UserDefaults 通知机制自动应用
+        UserDefaults.standard.set(tempShowInMenuBar, forKey: "showInMenuBar")
+        
+        // 应用开机启动设置
+        if tempLaunchAtLogin {
+            appState.enableLaunchAtLogin()
+        } else {
+            appState.disableLaunchAtLogin()
+        }
+        
+        // 应用 Touch ID 设置
+        // 无需额外操作，已通过 AppStorage 自动应用
     }
     
     // 通用设置
     private var generalSettings: some View {
         Form {
             Section {
-                Toggle("在菜单栏显示", isOn: $showInMenuBar)
-                    .onChange(of: showInMenuBar) { oldValue, newValue in
-                        // TODO: 更新菜单栏状态
-                    }
+                Toggle("在菜单栏显示", isOn: $tempShowInMenuBar)
                 
-                Toggle("开机时启动", isOn: $launchAtLogin)
-                    .onChange(of: launchAtLogin) { oldValue, newValue in
-                        // TODO: 配置开机启动
-                    }
+                Toggle("开机时启动", isOn: $tempLaunchAtLogin)
                 
-                Picker("验证码复制后清除", selection: $copyTimeout) {
+                Picker("验证码复制后清除", selection: $tempCopyTimeout) {
                     ForEach(copyTimeoutOptions, id: \.0) { timeout, label in
                         Text(label).tag(timeout)
                     }
@@ -73,7 +140,7 @@ struct SettingsView: View {
             }
             
             Section {
-                Picker("外观", selection: $appState.colorScheme) {
+                Picker("外观", selection: $tempColorScheme) {
                     Text("浅色").tag(Optional<ColorScheme>.some(.light))
                     Text("深色").tag(Optional<ColorScheme>.some(.dark))
                     Text("跟随系统").tag(Optional<ColorScheme>.none)
@@ -96,12 +163,9 @@ struct SettingsView: View {
     private var securitySettings: some View {
         Form {
             Section {
-                Toggle("使用 Touch ID 解锁", isOn: $useTouchID)
-                    .onChange(of: useTouchID) { oldValue, newValue in
-                        // TODO: 配置 Touch ID
-                    }
+                Toggle("使用 Touch ID 解锁", isOn: $tempUseTouchID)
                 
-                Picker("自动锁定", selection: $autoLockTimeout) {
+                Picker("自动锁定", selection: $tempAutoLockTimeout) {
                     ForEach(timeoutOptions, id: \.0) { timeout, label in
                         Text(label).tag(timeout)
                     }
@@ -121,61 +185,39 @@ struct SettingsView: View {
         }
     }
     
-    // 快捷键设置
-    private var shortcutSettings: some View {
-        Form {
-            Section {
-                HStack {
-                    Text("显示/隐藏窗口")
-                    Spacer()
-                    KeyboardShortcutView(shortcut: .init("⌘⇧M"))
-                }
-                
-                HStack {
-                    Text("显示/隐藏菜单栏")
-                    Spacer()
-                    KeyboardShortcutView(shortcut: .init("⌘⇧K"))
-                }
-                
-                HStack {
-                    Text("添加新账户")
-                    Spacer()
-                    KeyboardShortcutView(shortcut: .init("⌘N"))
-                }
-                
-                HStack {
-                    Text("复制选中账户验证码")
-                    Spacer()
-                    KeyboardShortcutView(shortcut: .init("⌘⇧C"))
-                }
-            }
-            .padding(.vertical, 4)
-        }
-    }
-    
     // 关于页面
     private var aboutView: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 16) {
             Image(systemName: "key.fill")
-                .font(.system(size: 64))
+                .font(.system(size: 48))
                 .foregroundColor(.accentColor)
+                .padding(.top, 20)
             
             Text("MFA 验证器")
-                .font(.title)
+                .font(.title2)
             
-            Text("版本 1.0.0")
+            Text("版本 \(appVersion)")
+                .font(.subheadline)
                 .foregroundColor(.secondary)
             
-            Text("© 2024 Your Company")
+            Text("\u{00A9} 2025 MFA 验证器开发组")
                 .font(.caption)
                 .foregroundColor(.secondary)
             
             Button("检查更新") {
                 // TODO: 检查更新
             }
-            .padding(.top)
+            .buttonStyle(.bordered)
+            .controlSize(.small)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    // 获取应用版本号
+    private var appVersion: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        return "\(version) (\(build))"
     }
 }
 
@@ -197,4 +239,4 @@ struct KeyboardShortcutView: View {
 #Preview {
     SettingsView()
         .environmentObject(AppState())
-} 
+}

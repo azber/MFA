@@ -4,6 +4,7 @@ struct SidebarView: View {
     @EnvironmentObject private var appState: AppState
     @Binding var searchText: String
     @State private var isAddingAccount = false
+    @State private var isShowingSettings = false
     
     var filteredAccounts: [MFAAccount] {
         if searchText.isEmpty {
@@ -32,6 +33,9 @@ struct SidebarView: View {
         .sheet(isPresented: $isAddingAccount) {
             AddAccountView()
         }
+        .sheet(isPresented: $isShowingSettings) {
+            SettingsView()
+        }
     }
     
     private var searchField: some View {
@@ -53,7 +57,7 @@ struct SidebarView: View {
                 Image(systemName: "plus")
             }
             Spacer()
-            Button(action: {}) {
+            Button(action: { isShowingSettings = true }) {
                 Image(systemName: "gear")
             }
         }
@@ -65,4 +69,4 @@ struct SidebarView: View {
 #Preview {
     SidebarView(searchText: .constant(""))
         .environmentObject(AppState())
-} 
+}

@@ -87,7 +87,9 @@ class CameraViewModel: NSObject, ObservableObject, AVCaptureMetadataOutputObject
                 session.addOutput(output)
                 
                 output.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-                output.metadataObjectTypes = [.qr]
+                if output.availableMetadataObjectTypes.contains(.qr) {
+                    output.metadataObjectTypes = [.qr]
+                }
             }
         } catch {
             print("Camera setup error: \(error)")
@@ -122,4 +124,4 @@ class CameraViewModel: NSObject, ObservableObject, AVCaptureMetadataOutputObject
     QRScannerView { code in
         print("Scanned code: \(code)")
     }
-} 
+}
